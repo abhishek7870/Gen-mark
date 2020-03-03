@@ -103,7 +103,6 @@ class DealerController extends Controller
     public function signIn(Request $request) {
         $validation = Validator::make($request->all(), [
             'phone_no' => 'required',
-            
         ]);
         if ($validation->fails()) {
             $errors = $validation->errors();
@@ -124,7 +123,34 @@ class DealerController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
     }
+
+
+      public function display(Request $request)
+      {
+                  $this->validate($request, [
+                        'token' => 'required'
+                    ]);
+             
+                    try {
+                        JWTAuth::invalidate($request->token);
+             
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'User logged out successfully'
+                        ]);
+                    } catch (JWTException $exception) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Sorry, the user cannot be logged out'
+                        ], 500);
+                    }
+      }
+      
+
+
+
     public function logout(Request $request) { 
+            // dd("sdfdsfks");
       JWTAuth::invalidate(JWTAuth::getToken());
       return response()->json(true, 200);
     }
