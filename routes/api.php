@@ -17,7 +17,9 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::resource('states','StateController')->middleware('isDealerTokenValid');
+Route::resource('states','StateController');
 Route::resource('dealers','DealerController');
 Route::post('signin','DealerController@signIn');
+Route::post('login','DealerController@login');
+Route::resource('companies','CompanyController');
 Route::post('logout','DealerController@logout')->middleware('isDealerTokenValid');

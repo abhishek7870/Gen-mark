@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use Illuminate\Http\Request;
+use Validator;
 
 class CompanyController extends Controller
 {
@@ -35,7 +36,24 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = Validator::make($request->all(),[
+            "key" => "required",
+            "company_code" => "required",
+            "image_name" => "required",
+            "image_url" => "required",
+            "name" => "required",
+            "api_url" => "required",
+            "sms_registration_url" => "required",
+            "sms_verification_url" => "required",
+            "dealer_verification_url" => "required",
+            "dealer_registration_url" => "required"
+        ]);
+        if($validation->fails()) {
+            $errors = $validation->errors();
+            return response()->json($errors,400);
+        }
+        $company = Company::create($request->all());
+        return response()->json($company,201);
     }
 
     /**
