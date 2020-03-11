@@ -20,4 +20,6 @@ use Illuminate\Http\Request;
 Route::resource('states','StateController');
 Route::resource('dealers','DealerController');
 Route::post('signin','DealerController@signIn');
+Route::post('login','DealerController@login');
+Route::resource('companies','CompanyController');
 Route::post('logout','DealerController@logout')->middleware('isDealerTokenValid');

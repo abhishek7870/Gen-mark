@@ -63,9 +63,15 @@ class DealerController extends Controller
      * @param  \App\Dealer  $dealer
      * @return \Illuminate\Http\Response
      */
-    public function show(Dealer $dealer)
+    public function show($id)
     {
-        //
+        $dealer = Dealer::find($id);
+        if($dealer)
+        {
+           return response()->json($dealer,201);
+        }
+        return response()->json(['error'=>'dealer not found']);
+
     }
 
     /**
@@ -104,7 +110,7 @@ class DealerController extends Controller
     public function signIn(Request $request) {
         $validation = Validator::make($request->all(), [
             'phone_no' => 'required',
-            
+            'otp' => 'required'
         ]);
         if ($validation->fails()) {
             $errors = $validation->errors();
@@ -113,7 +119,8 @@ class DealerController extends Controller
         $dealer = Dealer::authenticateDealer($request['phone_no']);
         if ($dealer) {
             $code = $dealer->codes()->latest()->first();
-            if($code->code == $otp) {
+            dd($code);
+            if($code->code == $dealer->otp) {
                 Code::destroy($code->id);
                 Config::set('auth.providers.users.model', \App\Dealer::class);
                 $customClaims = ['model_type' => 'dealer'];
@@ -133,13 +140,16 @@ class DealerController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
     }
+
     public function logout(Request $request) { 
+            // dd("sdfdsfks");
        // dd(JWTAuth::getToken());
       JWTAuth::invalidate(JWTAuth::getToken());
       return response()->json(true, 200);
     }
     public function login(Request $request)
     {
+       // dd("fdnsdf");
         $validation = Validator::make($request->all(), [
             'phone_no' => 'required',
             
@@ -148,13 +158,27 @@ class DealerController extends Controller
             $errors = $validation->errors();
             return response()->json($errors, 400);
         }
-       $dealer = Dealer::where('phone_no',$$request['phone_no'])->first();
+       $dealer = Dealer::where('phone_no',$request['phone_no'])->first();
+       //dd($dealer);
        if($dealer) {
-            $code = new Code();
-            $code->code = str_random(4);
-            $dealer->codes()->save($code);
+            sendSMS($dealer);
         return response()->json($dealer,201);
        }
        return response()->json(false,201); 
+    }
+
+    public function dealerVerifyProduct(Request $request)
+    {
+            $validation = Validator::make($request->all(),[
+                 'code' => 'required',
+                 'company_id' => 'required',
+                 'token' => 'required'
+            ]);
+            if($validation->fails())
+            {
+                $errors = $validation->errors();
+                return response()->json($errors,400);
+            }
+            
     }
 }

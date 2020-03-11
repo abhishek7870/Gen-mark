@@ -4,6 +4,7 @@ function sendSMS($user) {
   $code = new Code();
   $code->code = rand(pow(10, 3), pow(10, 4)-1);
   $user->codes()->save($code);
+  
 	$username = 'himanshu.sukhwani@gmail.com'; 
 	$hash = env('TEXTLOCAL_HASH');
 	$sender = urlencode('TXTLCL');

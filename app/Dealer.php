@@ -37,4 +37,8 @@ class Dealer extends Authenticatable implements JWTSubject
      {
        return $this->belongsToMany('App\Company','company_dealers','company_id','dealer_id');
      } 
+     public function state()
+     {
+         return $this->belongsTo('App\State','state_id');
+     }
 }
