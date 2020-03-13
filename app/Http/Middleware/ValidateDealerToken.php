@@ -23,7 +23,8 @@ class ValidateDealerToken extends BaseMiddleware
         // dd("hello");
         // dd($this->auth->setRequest($request)->getToken());
         if (! $token = $this->auth->setRequest($request)->getToken()) {
-            return $this->respond('tymon.jwt.absent', 'token_not_provided', 400);
+            // dd('tt');
+            return response()->json(['error'=>'token not provided'],400);
         }
         try {
             $user_type = JWTAuth::parseToken()->getPayload()->get('model_type');
@@ -38,21 +39,23 @@ class ValidateDealerToken extends BaseMiddleware
                 if($dealer) {
                     return $next($request);
                 }
-                return response()->json(['error' => 'Evaluator_not_found'], 404);
+                return response()->json(['error' => 'Dealer_not_found'], 404);
             }
             else 
             {
                 return response()->json(['Token Mismatch'], 400);
             }
           
-        } catch (TokenExpiredException $e) {
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            // dd("helo");
             return response()->json(['error' => 'Token Expired'], 400);
-        } catch (JWTException $e) {
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json(['error' => 'Invalid JWT token'], 400);
         }
         if (! $dealer) {
-            return response()->json(['tymon.jwt.user_not_found', 'evaluator_not_found'], 404);
+            return response()->json(['tymon.jwt.user_not_found', 'dealer_not_found'], 404);
         }
+        // dd("ello");
         return $next($request);
     }
 }
