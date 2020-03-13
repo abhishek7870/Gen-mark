@@ -15,7 +15,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $company = Company::all();
+         return response()->json($company->load('dealers'),200);
     }
 
     /**
@@ -39,8 +40,6 @@ class CompanyController extends Controller
         $validation = Validator::make($request->all(),[
             "key" => "required",
             "company_code" => "required",
-            "image_name" => "required",
-            "image_url" => "required",
             "name" => "required",
             "api_url" => "required",
             "sms_registration_url" => "required",

@@ -22,4 +22,5 @@ Route::resource('dealers','DealerController');
 Route::post('signin','DealerController@signIn');
 Route::post('login','DealerController@login');
 Route::resource('companies','CompanyController');
+Route::get('authenticate','DealerController@authenticateDealer')->middleware('isDealerTokenValid');
 Route::post('logout','DealerController@logout')->middleware('isDealerTokenValid');
