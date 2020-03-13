@@ -46,14 +46,16 @@ class ValidateDealerToken extends BaseMiddleware
                 return response()->json(['Token Mismatch'], 400);
             }
           
-        } catch (TokenExpiredException $e) {
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            // dd("helo");
             return response()->json(['error' => 'Token Expired'], 400);
-        } catch (JWTException $e) {
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json(['error' => 'Invalid JWT token'], 400);
         }
         if (! $dealer) {
             return response()->json(['tymon.jwt.user_not_found', 'dealer_not_found'], 404);
         }
+        // dd("ello");
         return $next($request);
     }
 }

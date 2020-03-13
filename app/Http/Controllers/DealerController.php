@@ -181,9 +181,9 @@ class DealerController extends Controller
             }
             
     }
-   public function authenticateDealer(Request $request)
+   public function authenticateDealer()
        {  
-          //dd(JWTAuth::parseToken());
+          // dd(JWTAuth::parseToken());
         // dd(JWTAuth::parseToken()); 
            try {                
                
@@ -192,11 +192,12 @@ class DealerController extends Controller
                if(!$dealer){
                    return response()->json(['error' => 'dealer_not_found']);
                }
-           } catch (\Tymon\Http\JWTAuth\Exceptions\TokenExpiredException $e) {
+           } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            // dd("hello");
                return response()->json(['token_expired'], $e->getStatusCode());
-           } catch (\Tymon\Http\JWTAuth\Exceptions\TokenInvalidException $e) {
+           } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
                return response()->json(['token_invalid'], $e->getStatusCode());
-           } catch (\Tymon\Http\JWTAuth\Exceptions\JWTException $e) {
+           } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
                return response()->json(['token_absent'], $e->getStatusCode());
            }
            return response()->json($dealer,200);
