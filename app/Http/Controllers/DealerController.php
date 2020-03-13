@@ -184,21 +184,19 @@ class DealerController extends Controller
    public function authenticateDealer(Request $request)
        {  
           //dd(JWTAuth::parseToken());
-         dd(JWTAuth::parseToken()->getPayload()->get('model_type')); 
+        // dd(JWTAuth::parseToken()); 
            try {                
-               if(!(JWTAuth::parseToken()->getPayload()->get('model_type') == 'dealer')) {
-                   return response()->json(['error' => 'Token mismatch'], 400);
-               }
+               
                $id = JWTAuth::parseToken()->getPayload()->get('sub');
                $dealer  = Dealer::find($id);
                if(!$dealer){
                    return response()->json(['error' => 'dealer_not_found']);
                }
-           } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+           } catch (\Tymon\Http\JWTAuth\Exceptions\TokenExpiredException $e) {
                return response()->json(['token_expired'], $e->getStatusCode());
-           } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+           } catch (\Tymon\Http\JWTAuth\Exceptions\TokenInvalidException $e) {
                return response()->json(['token_invalid'], $e->getStatusCode());
-           } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+           } catch (\Tymon\Http\JWTAuth\Exceptions\JWTException $e) {
                return response()->json(['token_absent'], $e->getStatusCode());
            }
            return response()->json($dealer,200);
