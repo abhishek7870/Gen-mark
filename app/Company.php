@@ -12,5 +12,5 @@ class Company extends Model
     public function dealers()
     {
     	return $this->belongsToMany('App\Dealer','company_dealers','company_id','dealer_id');
-    }
+    }	
 }
