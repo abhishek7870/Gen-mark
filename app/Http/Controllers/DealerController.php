@@ -19,7 +19,7 @@ class DealerController extends Controller
     public function index()
     {
         $dealers = Dealer::all();
-        return response()->json($dealers->load('companies'),200);
+        return response()->json($dealers->load('companies','state'),200);   
     }
 
     /**
