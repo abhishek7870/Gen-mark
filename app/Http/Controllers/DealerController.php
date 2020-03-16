@@ -57,18 +57,19 @@ class DealerController extends Controller
         return response()->json($dealer,201);
     }
 
-    /**
+  /**
      * Display the specified resource.
      *
      * @param  \App\Dealer  $dealer
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+
+    public function show(Request $request,$id)   
     {
         $dealer = Dealer::find($id);
         if($dealer)
         {
-           return response()->json($dealer,201);
+           return response()->json($dealer->load('companies'),201);
         }
         return response()->json(['error'=>'dealer not found']);
 

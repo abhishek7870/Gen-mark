@@ -16,6 +16,7 @@ class CompanyController extends Controller
     public function index()
     {
         $company = Company::all();
+        //return response()->json($company);
          return response()->json($company->load('dealers'),200);
     }
 
@@ -45,14 +46,31 @@ class CompanyController extends Controller
             "sms_registration_url" => "required",
             "sms_verification_url" => "required",
             "dealer_verification_url" => "required",
-            "dealer_registration_url" => "required"
+            "dealer_registration_url" => "required",
+            "image" => "required"
         ]);
         if($validation->fails()) {
             $errors = $validation->errors();
             return response()->json($errors,400);
         }
+
+        $temp = downloadImageAndSave($request->all());
+        $request['image_name'] = $temp['image_name'];
+        $request['image_url'] = $temp['image_url'];
         $company = Company::create($request->all());
         return response()->json($company,201);
+    }
+    public function companyDealer(Request $request,$id) 
+    { 
+        //dd($request->all());
+        $company = Company::find($id);  
+         //dd($company);
+       $temp['dealer_id'] = $request['dealer_id'];
+       $temp['company_id'] =  $company->id;
+       // dd($temp);
+       // $temp['company_delaer_id'] = $request['company_delaer_id'];
+       $company->dealers()->sync($temp);
+           return response()->json($company->load('dealers'),201);
     }
 
     /**
@@ -63,7 +81,8 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+
+        
     }
 
     /**
@@ -99,5 +118,4 @@ class CompanyController extends Controller
     {
         //
     }
-    
 }
