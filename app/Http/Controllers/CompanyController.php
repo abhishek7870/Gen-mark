@@ -63,13 +63,11 @@ class CompanyController extends Controller
     public function companyDealer(Request $request,$id) 
     { 
         //dd($request->all());
-        $company = Company::find($id);  
+       $company = Company::find($id);  
          //dd($company);
        $temp['dealer_id'] = $request['dealer_id'];
-       $temp['company_id'] =  $company->id;
-       // dd($temp);
-       // $temp['company_delaer_id'] = $request['company_delaer_id'];
-       $company->dealers()->sync($temp);
+       //$temp['company_id'] =$request['company_id'];
+       $company->dealers()->attach($temp);
            return response()->json($company->load('dealers'),201);
     }
 
@@ -79,13 +77,19 @@ class CompanyController extends Controller
      * @param  \App\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function show(Company $company)
+    public function show($id)
     {
+        $company = Company::find($id);
+        if($company)
+        {
+            return response()->json($company->load('dealers'),201);
+        }
+        return response()->json(['errors'=>'Company Not Found']);
 
         
     }
 
-    /**
+    /*
      * Show the form for editing the specified resource.
      *
      * @param  \App\Company  $company

@@ -44,7 +44,6 @@ class StateController extends Controller
         }
         $state = State::create($request->all());
         return response()->json($state,201);
-
     }
 
     /**
@@ -53,9 +52,9 @@ class StateController extends Controller
      * @param  \App\State  $state
      * @return \Illuminate\Http\Response
      */
-    public function show(State $state)
+    public function show($id)
     {
-        //
+        dd("njhjjk");   
     }
 
     /**
@@ -64,9 +63,21 @@ class StateController extends Controller
      * @param  \App\State  $state
      * @return \Illuminate\Http\Response
      */
-    public function edit(State $state)
+    public function edit(Request $request,$id)
     {
-        //
+        
+         $validation = Validator::make($request->all(),[
+           'state_name' => 'required|max:50'
+        ]);
+        if($validation->fails()) {
+            $errors = $validation->errors();
+        }
+        $state = State::find($id);
+        if($state)
+        {
+            $state->update($request->all());
+            return response()->json($state,201);
+        }
     }
 
     /**

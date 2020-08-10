@@ -25,3 +25,4 @@ Route::resource('companies','CompanyController');
 Route::get('authenticate','DealerController@authenticateDealer')->middleware('isDealerTokenValid');
 Route::post('logout','DealerController@logout')->middleware('isDealerTokenValid');
 Route::post('companydealer/{id}','CompanyController@companyDealer');
+//Route::post('dealercompany/{id}','DealerController@dealerCompany');
